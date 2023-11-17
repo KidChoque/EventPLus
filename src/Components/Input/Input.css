@@ -1,0 +1,6 @@
+#n1::-webkit-inner-spin-button,#n1::-webkit-outer-spin-button,
+#n2::-webkit-inner-spin-button,#n2::-webkit-outer-spin-button
+{
+-webkit-appearance: none;
+margin: 0;
+}
