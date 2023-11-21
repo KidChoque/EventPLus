@@ -8,25 +8,36 @@ import { Button, Input } from "../../Components/FormComponents/FormComponents";
 import api, { eventsTypeResource } from "../../Services/Service";
 import TableTp from "../TiposEvento/TableTp/TableTp";
 import Notification from "../../Components/Notification/Notification";
+import Spinner from "../../Components/Spinner/Spinner"
 // import eventImage  from '../../assets/icons/tipo-evento.svg'
 // import dafaultImage from '../../assets/images/default-image.jpeg'
 import "./TiposEvento.css";
 const TiposEvento = () => {
   const [frmEdit, setNextEvents] = useState(false); //está em modo de edição
   const [titulo, setTitulo] = useState("");
+  const [idTipoEvento,setIdTipoEvento]=useState(null)
   const [tipoEventos, setTipoEventos] = useState([]);
+  const [showSpinner,setShowSpinner]=useState(false)
 
   useEffect(()=>{
    async function loadEventsType(){
+
+  setShowSpinner(true)
 
       try {
         const retorno = await api.get(eventsTypeResource)
         setTipoEventos(retorno.data)
         
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.log("Erro na api")
         console.log(error);
+
       }
+
+  setShowSpinner(false)
+        
     }
     loadEventsType();
   },[]);
@@ -39,36 +50,110 @@ const TiposEvento = () => {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (titulo.trim().length < 3) {
-      alert("O título dee ter pelo menos 3 caracteres");
+    if (titulo.trim().length < 3) {  setNotifyUser({
+      titleNote:"Aviso",
+      textNote:`O título dee ter pelo menos 3 caracteres`,
+      imgIcon:"warning",
+      imgAlt:
+      "Imagem de ilustração de aviso.Moça em frente a um símbolo de exclamação",
+      showMessage:true   
+      
+    });
+    
     }
 
+
+    setShowSpinner(true)
     try {
       const retorno = await api.post(eventsTypeResource, {
         titulo: titulo,
       });
       setTitulo("");
+
+      setNotifyUser({
+        titleNote:"Sucesso",
+        textNote:`Tipo de evento Cadastrado`,
+        imgIcon:"success",
+        imgAlt:
+        "Imagem de ilustração de sucesso.Moça segurando um balão com simbolo de confirmação ok",
+        showMessage:true   
+    
+      });
+
+      const buscaEventos = await api.get(eventsTypeResource) //Retorno do array
+
+      setTipoEventos(buscaEventos.data)
+
     } catch (e) {
-      alert("Deu ruim no submit");
+      setNotifyUser({
+        titleNote:"Erro",
+        textNote:`Deu ruim no submit`,
+        imgIcon:"Danger",
+        imgAlt:
+        "Imagem de ilustração de erro.Rapaz segurando um balão com simbolo x",
+        showMessage:true   
+    
+      });
     }
+    setShowSpinner(false)
   }
   
   async function handleUpdate(e) {
+
     e.preventDefault()
-    const edit= await api.put(eventsTypeResource,{titulo:titulo})
-    alert("Bora Editar");
+
+    setShowSpinner(true)
+    try {
+      //atualizar na api
+      const edit= await api.put(eventsTypeResource+'/'+idTipoEvento,{titulo:titulo})
+
+      if (edit.status===204) {
+
+        setTitulo("");
+        setIdTipoEvento(null)
+        setNotifyUser({
+          titleNote:"Sucesso",
+          textNote:`Tipo de evento Atualizado`,
+          imgIcon:"success",
+          imgAlt:
+          "Imagem de ilustração de sucesso.Moça segurando um balão com simbolo de confirmação ok",
+          showMessage:true   
+      
+        });
+            //DESAFIO: fazer uma função para retirar o registro apagado do array tipoEventos
+    const retorno = await api.get(eventsTypeResource) //Retorno do array
+    setTipoEventos(retorno.data)
+
+    editActionAbort();
+        
+      }
+      
+    } catch (error) {
+      setNotifyUser({
+        titleNote:"Erro",
+        textNote:`Erro na operação.Por favor verifique sua conexão`,
+        imgIcon:"danger",
+        imgAlt:
+        "Imagem de ilustração de erro.Rapaz segurando um balão com simbolo x",
+        showMessage:true   
+    
+      });
+    }
+    
+    setShowSpinner(false)
 
   }
 
 // cancela a tela de ação de edição
  function editActionAbort(){
   setNextEvents(false)
-  setTitulo("")
+  setTitulo("")//reseta variáveis
+  setIdTipoEvento(null)//reseta variáveis
  }
 
 // Mostra o formulário de edição 
  async function showUpdateForm(idElement){
-
+    setIdTipoEvento(idElement) //Preeenche o id do evento para poder atualizar
     setNextEvents(true)
     try {
       const retorno = await api.get(`${eventsTypeResource}/${idElement}`);
@@ -81,25 +166,26 @@ const TiposEvento = () => {
 
  //Apaga o tipo de evento na api
  async function handleDelete(idElement){
-  setNotifyUser({
-    titleNote:"Sucesso",
-    textNote:`Cadastro excluído com sucesso`,
-    imgIcon:"sucess",
-    imgAlt:
-    "Imagem de ilustração de sucesso.Moça segurando um balão com simbolo de confirmação ok",
-    showMessage:true   
-
-  });
+  
   if (!window.confirm("Confirma sua exclusão ?")) {
     return
   }
+  setShowSpinner(true)
 try {
 
     const retorno = await api.delete(`${eventsTypeResource}/${idElement}`);
 
 
   if (retorno.status === 204) {
-    alert("Cadastro Deletado")
+    setNotifyUser({
+      titleNote:"Sucesso",
+      textNote:`Cadastro excluído com sucesso`,
+      imgIcon:"sucess",
+      imgAlt:
+      "Imagem de ilustração de sucesso.Moça segurando um balão com simbolo de confirmação ok",
+      showMessage:true   
+  
+    });
     
     //DESAFIO: fazer uma função para retirar o registro apagado do array tipoEventos
     const retorno = await api.get(eventsTypeResource) //Retorno do array
@@ -109,10 +195,19 @@ try {
   }
 } 
   catch (error) {
-    alert("Problemas para deletar o cadastro")
+    setNotifyUser({
+      titleNote:"Erro",
+      textNote:`Erro na exclusão do cadastro`,
+      imgIcon:"danger",
+      imgAlt:
+      "Imagem de ilustração de erro.Rapaz segurando um balão com simbolo x",
+      showMessage:true   
+  
+    });
 }
 
-  
+setShowSpinner(false)
+
  }
 
 const[notifyUser,setNotifyUser]= useState([]) 
@@ -120,6 +215,8 @@ const[notifyUser,setNotifyUser]= useState([])
   return (
     <>
     {<Notification{...notifyUser}setNotifyUser={setNotifyUser}/>}
+
+    {showSpinner ? <Spinner/>:null}
       <Main>
         <section className="cadastro-evento-section">
           <Container>
@@ -173,6 +270,7 @@ const[notifyUser,setNotifyUser]= useState([])
                       setTitulo(e.target.value);
                     }}
                   />
+
 
                   <div className="buttons-editbox">
 

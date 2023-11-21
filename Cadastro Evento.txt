@@ -1,0 +1,8 @@
+{
+  "dataEvento": "2023-11-25",
+  "nomeEvento": "Doidera",
+  "descricao": "Evento dos doido",
+  "idTipoEvento": "0e68bf01-e41a-4543-a306-6c5e3c1263ad",
+  "idInstituicao": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+ 
+}

@@ -18,7 +18,7 @@ function Notification({
   showMessage = false,
   setNotifyUser,
 }) {
-  // resolver, está sendo chamada duas vezes.. componente sendo montado duas vezes na inicializa'ão
+  // resolver, está sendo chamada duas vezes.. componente sendo montado duas vezes na inicialização
   useEffect(() => {
     let initTimeout = () => {
       const hide = () => {
