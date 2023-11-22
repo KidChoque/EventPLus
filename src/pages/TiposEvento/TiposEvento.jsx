@@ -8,7 +8,7 @@ import { Button, Input } from "../../Components/FormComponents/FormComponents";
 import api, { eventsTypeResource } from "../../Services/Service";
 import TableTp from "../TiposEvento/TableTp/TableTp";
 import Notification from "../../Components/Notification/Notification";
-import Spinner from "../../Components/Spinner/Spinner"
+import Spinner from "../../Components/Spinner/Spinner";
 // import eventImage  from '../../assets/icons/tipo-evento.svg'
 // import dafaultImage from '../../assets/images/default-image.jpeg'
 import "./TiposEvento.css";
@@ -227,8 +227,8 @@ const[notifyUser,setNotifyUser]= useState([])
               {/* <ImageIlustrator imageRender={(ImageIlustrator.imageRender === '') ? dafaultImage : typeEventImage}/> */}
               <ImageIlustrator imageRender={typeEventImage} />
               <form
-                action=""
-                className="ftipo-evento"
+               action=""
+                className=" ftipo-evento"
                 onSubmit={frmEdit ? handleUpdate : handleSubmit}
               >
                 {/* Cadastrar ou editar? */}
