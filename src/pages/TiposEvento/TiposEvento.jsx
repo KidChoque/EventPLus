@@ -15,55 +15,42 @@ import "./TiposEvento.css";
 const TiposEvento = () => {
   const [frmEdit, setNextEvents] = useState(false); //está em modo de edição
   const [titulo, setTitulo] = useState("");
-  const [idTipoEvento,setIdTipoEvento]=useState(null)
+  const [idTipoEvento, setIdTipoEvento] = useState(null);
   const [tipoEventos, setTipoEventos] = useState([]);
-  const [showSpinner,setShowSpinner]=useState(false)
+  const [showSpinner, setShowSpinner] = useState(false);
 
-  useEffect(()=>{
-   async function loadEventsType(){
-
-  setShowSpinner(true)
+  useEffect(() => {
+    async function loadEventsType() {
+      setShowSpinner(true);
 
       try {
-        const retorno = await api.get(eventsTypeResource)
-        setTipoEventos(retorno.data)
-        
-      } 
-      
-      catch (error) {
-        console.log("Erro na api")
+        const retorno = await api.get(eventsTypeResource);
+        setTipoEventos(retorno.data);
+      } catch (error) {
+        console.log("Erro na api");
         console.log(error);
-
       }
 
-  setShowSpinner(false)
-        
+      setShowSpinner(false);
     }
     loadEventsType();
-  },[]);
-
-
-  
-  
-  
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (titulo.trim().length < 3) {  setNotifyUser({
-      titleNote:"Aviso",
-      textNote:`O título dee ter pelo menos 3 caracteres`,
-      imgIcon:"warning",
-      imgAlt:
-      "Imagem de ilustração de aviso.Moça em frente a um símbolo de exclamação",
-      showMessage:true   
-      
-    });
-    
+    if (titulo.trim().length < 3) {
+      setNotifyUser({
+        titleNote: "Aviso",
+        textNote: `O título dee ter pelo menos 3 caracteres`,
+        imgIcon: "warning",
+        imgAlt:
+          "Imagem de ilustração de aviso.Moça em frente a um símbolo de exclamação",
+        showMessage: true,
+      });
     }
 
-
-    setShowSpinner(true)
+    setShowSpinner(true);
     try {
       const retorno = await api.post(eventsTypeResource, {
         titulo: titulo,
@@ -71,152 +58,133 @@ const TiposEvento = () => {
       setTitulo("");
 
       setNotifyUser({
-        titleNote:"Sucesso",
-        textNote:`Tipo de evento Cadastrado`,
-        imgIcon:"success",
+        titleNote: "Sucesso",
+        textNote: `Tipo de evento Cadastrado`,
+        imgIcon: "success",
         imgAlt:
-        "Imagem de ilustração de sucesso.Moça segurando um balão com simbolo de confirmação ok",
-        showMessage:true   
-    
+          "Imagem de ilustração de sucesso.Moça segurando um balão com simbolo de confirmação ok",
+        showMessage: true,
       });
 
-      const buscaEventos = await api.get(eventsTypeResource) //Retorno do array
+      const buscaEventos = await api.get(eventsTypeResource); //Retorno do array
 
-      setTipoEventos(buscaEventos.data)
-
+      setTipoEventos(buscaEventos.data);
     } catch (e) {
       setNotifyUser({
-        titleNote:"Erro",
-        textNote:`Deu ruim no submit`,
-        imgIcon:"Danger",
+        titleNote: "Erro",
+        textNote: `Deu ruim no submit`,
+        imgIcon: "Danger",
         imgAlt:
-        "Imagem de ilustração de erro.Rapaz segurando um balão com simbolo x",
-        showMessage:true   
-    
+          "Imagem de ilustração de erro.Rapaz segurando um balão com simbolo x",
+        showMessage: true,
       });
     }
-    setShowSpinner(false)
+    setShowSpinner(false);
   }
-  
+
   async function handleUpdate(e) {
+    e.preventDefault();
 
-    e.preventDefault()
-
-    setShowSpinner(true)
+    setShowSpinner(true);
     try {
       //atualizar na api
-      const edit= await api.put(eventsTypeResource+'/'+idTipoEvento,{titulo:titulo})
+      const edit = await api.put(eventsTypeResource + "/" + idTipoEvento, {
+        titulo: titulo,
+      });
 
-      if (edit.status===204) {
-
+      if (edit.status === 204) {
         setTitulo("");
-        setIdTipoEvento(null)
+        setIdTipoEvento(null);
         setNotifyUser({
-          titleNote:"Sucesso",
-          textNote:`Tipo de evento Atualizado`,
-          imgIcon:"success",
+          titleNote: "Sucesso",
+          textNote: `Tipo de evento Atualizado`,
+          imgIcon: "success",
           imgAlt:
-          "Imagem de ilustração de sucesso.Moça segurando um balão com simbolo de confirmação ok",
-          showMessage:true   
-      
+            "Imagem de ilustração de sucesso.Moça segurando um balão com simbolo de confirmação ok",
+          showMessage: true,
         });
-            //DESAFIO: fazer uma função para retirar o registro apagado do array tipoEventos
-    const retorno = await api.get(eventsTypeResource) //Retorno do array
-    setTipoEventos(retorno.data)
+        //DESAFIO: fazer uma função para retirar o registro apagado do array tipoEventos
+        const retorno = await api.get(eventsTypeResource); //Retorno do array
+        setTipoEventos(retorno.data);
 
-    editActionAbort();
-        
+        editActionAbort();
       }
-      
     } catch (error) {
       setNotifyUser({
-        titleNote:"Erro",
-        textNote:`Erro na operação.Por favor verifique sua conexão`,
-        imgIcon:"danger",
+        titleNote: "Erro",
+        textNote: `Erro na operação.Por favor verifique sua conexão`,
+        imgIcon: "danger",
         imgAlt:
-        "Imagem de ilustração de erro.Rapaz segurando um balão com simbolo x",
-        showMessage:true   
-    
+          "Imagem de ilustração de erro.Rapaz segurando um balão com simbolo x",
+        showMessage: true,
       });
     }
-    
-    setShowSpinner(false)
 
+    setShowSpinner(false);
   }
 
-// cancela a tela de ação de edição
- function editActionAbort(){
-  setNextEvents(false)
-  setTitulo("")//reseta variáveis
-  setIdTipoEvento(null)//reseta variáveis
- }
+  // cancela a tela de ação de edição
+  function editActionAbort() {
+    setNextEvents(false);
+    setTitulo(""); //reseta variáveis
+    setIdTipoEvento(null); //reseta variáveis
+  }
 
-// Mostra o formulário de edição 
- async function showUpdateForm(idElement){
-    setIdTipoEvento(idElement) //Preeenche o id do evento para poder atualizar
-    setNextEvents(true)
+  // Mostra o formulário de edição
+  async function showUpdateForm(idElement) {
+    setIdTipoEvento(idElement); //Preeenche o id do evento para poder atualizar
+    setNextEvents(true);
     try {
       const retorno = await api.get(`${eventsTypeResource}/${idElement}`);
-      setTitulo(retorno.data.titulo)
+      setTitulo(retorno.data.titulo);
+    } catch (error) {}
+  }
+
+  //Apaga o tipo de evento na api
+  async function handleDelete(idElement) {
+    if (!window.confirm("Confirma sua exclusão ?")) {
+      return;
+    }
+    setShowSpinner(true);
+    try {
+      const retorno = await api.delete(`${eventsTypeResource}/${idElement}`);
+
+      if (retorno.status === 204) {
+        setNotifyUser({
+          titleNote: "Sucesso",
+          textNote: `Cadastro excluído com sucesso`,
+          imgIcon: "sucess",
+          imgAlt:
+            "Imagem de ilustração de sucesso.Moça segurando um balão com simbolo de confirmação ok",
+          showMessage: true,
+        });
+
+        //DESAFIO: fazer uma função para retirar o registro apagado do array tipoEventos
+        const retorno = await api.get(eventsTypeResource); //Retorno do array
+
+        setTipoEventos(retorno.data);
+      }
     } catch (error) {
-      
+      setNotifyUser({
+        titleNote: "Erro",
+        textNote: `Erro na exclusão do cadastro`,
+        imgIcon: "danger",
+        imgAlt:
+          "Imagem de ilustração de erro.Rapaz segurando um balão com simbolo x",
+        showMessage: true,
+      });
     }
 
- }
-
- //Apaga o tipo de evento na api
- async function handleDelete(idElement){
-  
-  if (!window.confirm("Confirma sua exclusão ?")) {
-    return
+    setShowSpinner(false);
   }
-  setShowSpinner(true)
-try {
 
-    const retorno = await api.delete(`${eventsTypeResource}/${idElement}`);
-
-
-  if (retorno.status === 204) {
-    setNotifyUser({
-      titleNote:"Sucesso",
-      textNote:`Cadastro excluído com sucesso`,
-      imgIcon:"sucess",
-      imgAlt:
-      "Imagem de ilustração de sucesso.Moça segurando um balão com simbolo de confirmação ok",
-      showMessage:true   
-  
-    });
-    
-    //DESAFIO: fazer uma função para retirar o registro apagado do array tipoEventos
-    const retorno = await api.get(eventsTypeResource) //Retorno do array
-
-    setTipoEventos(retorno.data)
-    
-  }
-} 
-  catch (error) {
-    setNotifyUser({
-      titleNote:"Erro",
-      textNote:`Erro na exclusão do cadastro`,
-      imgIcon:"danger",
-      imgAlt:
-      "Imagem de ilustração de erro.Rapaz segurando um balão com simbolo x",
-      showMessage:true   
-  
-    });
-}
-
-setShowSpinner(false)
-
- }
-
-const[notifyUser,setNotifyUser]= useState([]) 
+  const [notifyUser, setNotifyUser] = useState([]);
 
   return (
     <>
-    {<Notification{...notifyUser}setNotifyUser={setNotifyUser}/>}
+      {<Notification {...notifyUser} setNotifyUser={setNotifyUser} />}
 
-    {showSpinner ? <Spinner/>:null}
+      {showSpinner ? <Spinner /> : null}
       <Main>
         <section className="cadastro-evento-section">
           <Container>
@@ -227,7 +195,7 @@ const[notifyUser,setNotifyUser]= useState([])
               {/* <ImageIlustrator imageRender={(ImageIlustrator.imageRender === '') ? dafaultImage : typeEventImage}/> */}
               <ImageIlustrator imageRender={typeEventImage} />
               <form
-               action=""
+                action=""
                 className=" ftipo-evento"
                 onSubmit={frmEdit ? handleUpdate : handleSubmit}
               >
@@ -256,47 +224,38 @@ const[notifyUser,setNotifyUser]= useState([])
                       />
                     </>
                   ) : (
+                    <>
+                      <Input
+                        id="Titulo"
+                        placeholder="Título"
+                        name="titulo"
+                        type="text"
+                        required="required"
+                        value={titulo}
+                        manipulationFunction={(e) => {
+                          setTitulo(e.target.value);
+                        }}
+                      />
 
-                 <>
+                      <div className="buttons-editbox">
+                        <Button
+                          textButton="Editar"
+                          id="cadastrar"
+                          name="cadastrar"
+                          type="submit"
+                          addClass="button-component--midle"
+                        />
 
-                    <Input
-                    id="Titulo"
-                    placeholder="Título"
-                    name="titulo"
-                    type="text"
-                    required="required"
-                    value={titulo}
-                    manipulationFunction={(e) => {
-                      setTitulo(e.target.value);
-                    }}
-                  />
-
-
-                  <div className="buttons-editbox">
-
-                  <Button
-                    textButton="Editar"
-                    id="cadastrar"
-                    name="cadastrar"
-                    type="submit"
-                    addClass="button-component--midle"
-                  />
-
-
-                   <Button
-                    textButton="cancelar"
-                    id="magica"
-                    name="magica"
-                    type="submit"
-                    manipulationFunction={editActionAbort}
-                    addClass="button-component--midle"
-
-                  />
-
-                  </div>
-
-                  
-                  </>
+                        <Button
+                          textButton="cancelar"
+                          id="magica"
+                          name="magica"
+                          type="submit"
+                          manipulationFunction={editActionAbort}
+                          addClass="button-component--midle"
+                        />
+                      </div>
+                    </>
                   )
                   //Editar
                 }
@@ -310,14 +269,11 @@ const[notifyUser,setNotifyUser]= useState([])
           <Container>
             <Titulo titleText={"Lista Tipo de Eventos"} color="white" />
 
-            <TableTp  
-            
-            dados={tipoEventos}
-            fnUpdate={showUpdateForm}
-            fnDelete={handleDelete}
-            
+            <TableTp
+              dados={tipoEventos}
+              fnUpdate={showUpdateForm}
+              fnDelete={handleDelete}
             />
-
           </Container>
         </section>
       </Main>
