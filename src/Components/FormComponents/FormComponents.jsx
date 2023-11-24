@@ -52,7 +52,7 @@ return(
     options,
     manipulationFunction,
     additionalClass = "",
-    defaultValue
+    value = ""
  }) => {
     return (
 <select 
@@ -61,12 +61,12 @@ id={id}
 required={required}
 className={`input-component ${additionalClass}`}
 onChange={manipulationFunction}
-value={defaultValue}
+value={value}
 >
-    {/* <option value="">Selecione</option> */}
-     {options.map((o) => {
+    <option value="">Selecione</option>
+     {options.map((o, i) => {
         return (
-            <option key={Math.random()} value={o.value}>{o.text}</option>
+            <option key={i} value={o.value}>{o.text}</option>
         )
      })}
 </select>

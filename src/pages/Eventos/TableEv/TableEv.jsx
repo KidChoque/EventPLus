@@ -1,6 +1,7 @@
 import React from "react";
 import editPen from "../../../assets/icons/edit-pen.svg";
 import trashDelete from "../../../assets/icons/trash-delete.svg";
+import { dateFormatDbToView } from "../../../Utils/stringFunctions";
 import "./TableEv.css";
 
 const TableEv = ({ dados, fnDelete = null, fnUpdate = null }) => {
@@ -19,9 +20,6 @@ const TableEv = ({ dados, fnDelete = null, fnUpdate = null }) => {
                 Tipo do Evento
               </th>
               <th className="table-data__head-title table-data__head-title--big">
-               Instituição
-              </th>
-              <th className="table-data__head-title table-data__head-title--big">
                Data
               </th>
               <th className="table-data__head-title table-data__head-title--little">
@@ -34,51 +32,55 @@ const TableEv = ({ dados, fnDelete = null, fnUpdate = null }) => {
       </thead>
 
       <tbody>
-        {dados.map((ev) => {
+        {dados.map((ev,i) => {
           return (
-            <tr className="table-data__head-row">
+            <tr className="table-data__head-row" key={i}>
 
-            <td className="table-data__data table-data__data--big">
-            {ev.nomeEvento}
-            </td>
+              <td className="table-data__data table-data__data--big">
+              {ev.nomeEvento}
+              </td>
 
-            <td className="table-data__data table-data__data--big">
-            {ev.descricao}
-            </td>
+              <td className="table-data__data table-data__data--big">
+              {ev.tiposEvento.titulo}
+              </td>
 
-            <td className="table-data__data table-data__data--big">
-            {ev.dataEvento}
-            </td>
-            
-            
-  
-            <td className="table-data__data table-data__data--little">
-              <img 
-              idEvento={ev.idEvento}
-               className="table-data__icon"
-               src={editPen} 
-               alt="" 
-              onClick={(e)=>{
-                fnUpdate(ev.idEvento)
-              }}
-              />
-            </td>
-  
-            <td className="table-data__data table-data__data--little" 
-            
-            
-            >
-              <img 
-              idEvento={ev.idEvento}
-              className="table-data__icon" 
-              src={trashDelete} 
-              alt=""
-              onClick={(e)=>{
-                fnDelete(ev.idEvento)
-              }} />
+
+
+              <td className="table-data__data table-data__data--big">
+              {ev.descricao}
+              </td>
+
+              <td className="table-data__data table-data__data--big">
+              {dateFormatDbToView(ev.dataEvento)}
+              </td>
               
-            </td>
-          </tr>
+              
+    
+              <td className="table-data__data table-data__data--little">
+                <img 
+                  className="table-data__icon"
+                  src={editPen} 
+                  alt="" 
+                  onClick={(e)=>{
+                    fnUpdate(ev)
+                  }}
+                />
+              </td>
+    
+              <td className="table-data__data table-data__data--little" 
+              
+              
+              >
+                <img 
+                className="table-data__icon" 
+                src={trashDelete} 
+                alt=""
+                onClick={(e)=>{
+                  fnDelete(ev.idEvento)
+                }} />
+                
+              </td>
+            </tr>
 
           );
         })}

@@ -18,6 +18,7 @@ const TiposEvento = () => {
   const [idTipoEvento, setIdTipoEvento] = useState(null);
   const [tipoEventos, setTipoEventos] = useState([]);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [notifyUser, setNotifyUser] = useState([]);
 
   useEffect(() => {
     async function loadEventsType() {
@@ -73,7 +74,7 @@ const TiposEvento = () => {
       setNotifyUser({
         titleNote: "Erro",
         textNote: `Deu ruim no submit`,
-        imgIcon: "Danger",
+        imgIcon: "danger",
         imgAlt:
           "Imagem de ilustração de erro.Rapaz segurando um balão com simbolo x",
         showMessage: true,
@@ -178,7 +179,6 @@ const TiposEvento = () => {
     setShowSpinner(false);
   }
 
-  const [notifyUser, setNotifyUser] = useState([]);
 
   return (
     <>
