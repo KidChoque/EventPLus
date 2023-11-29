@@ -20,6 +20,7 @@ import "./Eventos.css";
 
 const Eventos = () => {
   const [eventos, setEventos] = useState([]);
+  const [idEvento,setIdEvento]=useState("")
   const [nomeEvento, setNomeEvento] = useState("");
   const [tipoEventos, setTipoEventos] = useState([]);
   const [idTipoEvento, setIdTipoEvento] = useState("");
@@ -108,13 +109,28 @@ const Eventos = () => {
     }
   }
 
-  async function showUpdateForm() {
+  async function showUpdateForm(idEvento) {
     setFrmEdit(true);
+    setIdEvento(idEvento)
+    try {
+      const retorno = await api.get(`${eventsResourse}/${idEvento}`);
+      setNomeEvento(retorno.data.nomeEvento)
+      setDescricao(retorno.data.descricao)
+      setDataEvento(retorno.data.dataEvento)
+      console.log(retorno);
+    } catch (error) {
+      alert('Sei nao deu ruim')
+    }
   }
 
   async function handleUpdate() {
     try {
-      const edit = await api.put(`${eventsResourse}/${idTipoEvento}`);
+      const edit = await api.put(`${eventsResourse}/${idEvento}`,{
+        nomeEvento: nomeEvento,
+        descricao: descricao,
+        idTipoEvento: idTipoEvento,
+        dataEvento: dataEvento,
+      });
     } catch (error) {}
     return;
   }
@@ -226,6 +242,7 @@ const Eventos = () => {
                     />
                   </>
                 ) : (
+                  //EDICAO DE EVENTO
                   <>
                     <Input
                       id="NomeEvento"
@@ -233,7 +250,7 @@ const Eventos = () => {
                       name="nomeEvento"
                       type="text"
                       required="required"
-                      value={frmEdit.nomeEvento}
+                      value={nomeEvento}
                       manipulationFunction={(e) => {setFrmEditData({
                         ...setFrmEditData,nomeEvento:e.target.value});
                       }}
@@ -245,7 +262,7 @@ const Eventos = () => {
                       name="descricao"
                       type="text"
                       required="required"
-                      value={frmEdit.descricao}
+                      value={descricao}
                       manipulationFunction={(e) => {
                         setDescricao(e.target.value);
                       }}
@@ -256,7 +273,7 @@ const Eventos = () => {
                       name={"tiposEvento"}
                       required={"required"}
                       options={tipoEventos}
-                      value={frmEdit.idTipoEvento}
+                      value={idTipoEvento}
                       manipulationFunction={(e) => {setFrmEditData({
                         ...setFrmEditData,tipoEventos:e.target.value});
                       }}
@@ -268,7 +285,7 @@ const Eventos = () => {
                       name="data"
                       type="date"
                       required="required"
-                      value={new Date(frmEdit.dataEvento).toLocaleDateString(
+                      value={new Date(dataEvento).toLocaleDateString(
                         "sv-SE"
                       )}
                       manipulationFunction={(e) => {setFrmEditData({
@@ -310,7 +327,8 @@ const Eventos = () => {
             />
           </Container>
         </section>
-      </Main>
+      </Main>`
+     
     </>
   );
 };

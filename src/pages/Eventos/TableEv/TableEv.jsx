@@ -62,7 +62,7 @@ const TableEv = ({ dados, fnDelete = null, fnUpdate = null }) => {
                   src={editPen} 
                   alt="" 
                   onClick={(e)=>{
-                    fnUpdate(ev)
+                    fnUpdate(ev.idEvento)
                   }}
                 />
               </td>
