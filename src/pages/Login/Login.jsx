@@ -1,48 +1,49 @@
 import React, { useContext, useState } from "react";
 import ImageIllustrator from "../../Components/ImageIllustrator/ImageIllustrator";
 import logo from "../../assets/icons/logo-pink.svg";
-import LoginImage from "../../assets/icons/login.svg"
+import LoginImage from "../../assets/icons/login.svg";
 import { Input, Button } from "../../Components/FormComponents/FormComponents";
-import api, {loginResource} from "../../Services/Service";
-import "./Login.css";
+import api, { loginResource } from "../../Services/Service";
 import { UserContext, userDecodeToken } from "../../context/AuthContext";
+import {useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import "./Login.css"; 
 
 const Login = () => {
-  const [user,setUser]= useState({email:"aluno@email.com",senha:""});
+  const [user, setUser] = useState({ email: "aluno@email.com", senha: "12345" });
 
-  const {userData,setUserData}= useContext(UserContext)
+  const { userData, setUserData } = useContext(UserContext);
+  const navigate = useNavigate()
 
-  async function handleSubmit(e){
+  useEffect(() => {if(userData.nome){
+    navigate("/")
+  }})
+
+
+  async function handleSubmit(e) {
     //preventDefault - o D é MAIUSCULO
     e.preventDefault();
     //Validar usuário e senha
-      if (user.email.length < 3  && user.senha.length < 5 ) {
-        alert("Email e senha precisam de 3 caracteres")
-        return
-      }
-      try {
-        const promise = await api.post(loginResource,{
-            email:user.email,
-            senha:user.senha
+    if (user.email.length < 3 && user.senha.length < 5) {
+      alert("Email e senha precisam de 3 caracteres");
+      return;
+    }
+    try {
+      const promise = await api.post(loginResource, {
+        email: user.email,
+        senha: user.senha,
+      });
 
-         
+      const userFullToken = userDecodeToken(promise.data.token);
+      setUserData(userFullToken);
+     
+      localStorage.setItem("token", JSON.stringify(userFullToken));
+      navigate("/")
 
-
-        })
-
-        const userFullToken = userDecodeToken(promise.data);
-        setUserData= (userFullToken)
-
-        localStorage.setItem("token",JSON.stringify(userFullToken))
-      } catch (error) {
-        alert("Verifique os dados e a conexão com a internet !")
-        
-      }
-
-
-
+    } catch (error) {
+      alert("Verifique os dados e a conexão com a internet !");
+    }
   }
-
 
   return (
     <div className="layout-grid-login">
@@ -68,7 +69,9 @@ const Login = () => {
               name="login"
               required={true}
               value={user.email}
-              manipulationFunction={(e) => {setUser({...user,email: e.target.value.trim()})}}
+              manipulationFunction={(e) => {
+                setUser({ ...user, email: e.target.value.trim() });
+              }}
               placeholder="Username"
             />
             <Input
@@ -78,7 +81,9 @@ const Login = () => {
               name="senha"
               required={true}
               value={user.senha}
-              manipulationFunction={(e) => {setUser({...user,senha: e.target.value.trim()})}}
+              manipulationFunction={(e) => {
+                setUser({ ...user, senha: e.target.value.trim() });
+              }}
               placeholder="****"
             />
 
