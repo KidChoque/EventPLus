@@ -6,9 +6,12 @@ import axios from "axios";
 
 export const eventsResourse = '/Evento'
 
+export const myEventsResourse = '/PresencasEvento/ListarMinhas'
 
 export const eventsTypeResource = '/TiposEvento'
+
 export const loginResource = '/Login'
+
 
 
 const apiPort = "7118";

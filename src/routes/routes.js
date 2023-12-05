@@ -10,7 +10,8 @@ import Teste from '../pages/Teste/Teste';
 import Header from '../Components/Header/Header';
 import Nav from '../Components/Nav/Nav';
 import Footer from '../Components/Footer/Footer';
-import { PrivateRoute } from './PrivateRoute';
+import { PrivateRoute } from '../routes/PrivateRoute';
+import EventosAluno from '../pages/EventosAluno/EventosAluno';
 const Rotas = () => (
     <BrowserRouter>
         <Header />
@@ -38,6 +39,19 @@ const Rotas = () => (
 
                 }
                 path="/eventos">
+
+            </Route>
+
+            <Route
+                element={
+                    <PrivateRoute>
+
+                        <EventosAluno />
+
+                    </PrivateRoute>
+
+                }
+                path="/eventos-aluno">
 
             </Route>
 

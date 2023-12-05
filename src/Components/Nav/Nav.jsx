@@ -7,7 +7,6 @@ import { UserContext } from "../../context/AuthContext";
 const Nav = ({ exibeNavbar, setExibeNavbar }) => {
   const { userData } = useContext(UserContext);
 
-  console.log(`Exibe o Menu?${exibeNavbar}`);
   return (
     <nav className={`navbar ${exibeNavbar ? "exibeNavbar" : ""}`}>
       <span
@@ -41,7 +40,7 @@ const Nav = ({ exibeNavbar, setExibeNavbar }) => {
             </Link>{" "}
           </>
         ) : userData.nome && userData.role === "comum" ? (
-          <Link to="/eventos" className="navbar__item">
+          <Link to="/eventos-aluno" className="navbar__item">
             Eventos Aluno
           </Link>
         ) : null}

@@ -11,10 +11,11 @@ import "./Login.css";
 
 const Login = () => {
   const [user, setUser] = useState({ email: "aluno@email.com", senha: "12345" });
+  // const [user, setUser] = useState({ email: "adm@email.com", senha: "adm1234" });
 
   const { userData, setUserData } = useContext(UserContext);
   const navigate = useNavigate()
-
+  
   useEffect(() => {if(userData.nome){
     navigate("/")
   }})

@@ -51,7 +51,7 @@ return(
     name,
     options,
     manipulationFunction,
-    additionalClass = "",
+    addClass = "",
     value = ""
  }) => {
     return (
@@ -59,7 +59,7 @@ return(
 name={name} 
 id={id}
 required={required}
-className={`input-component ${additionalClass}`}
+className={`input-component ${addClass}`}
 onChange={manipulationFunction}
 value={value}
 >
