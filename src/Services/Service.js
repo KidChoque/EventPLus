@@ -12,6 +12,8 @@ export const eventsTypeResource = '/TiposEvento'
 
 export const loginResource = '/Login'
 
+export const presencesEventResource = '/PresencasEvento'
+
 
 
 const apiPort = "7118";
